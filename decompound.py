@@ -136,6 +136,7 @@ def use_common_words(decompounds: List[Tuple[str]], light: bool =False) -> List[
     
     if not candidates or light:
         candidates = sorted(candidates_light, key=lambda x: x[1], reverse=True)
+        #print(candidates)
         candidates = [y[0] for y in candidates]
     if not candidates:
         candidates = decompounds
@@ -183,6 +184,7 @@ def get_valid_parts(compound_word: str, saved_words: dict = {}) -> List[str]:
                 instant = get_valid_parts(pair[0][0], saved_words=saved_words)
                 #print(instant)
                 all_instants = [y + [pair[1][0]] for y in instant]
+                all_instants = [y for y in all_instants if all(x in eng_words for x in y)]
                 if all_instants:
                     definite_parts.extend(all_instants)
                 
@@ -190,8 +192,10 @@ def get_valid_parts(compound_word: str, saved_words: dict = {}) -> List[str]:
                 instant = get_valid_parts(pair[1][0], saved_words=saved_words)
                 #print(instant)
                 all_instants = [[pair[0][0]] + y for y in instant]
+                all_instants = [y for y in all_instants if all(x in eng_words for x in y)]
                 if all_instants:
                     definite_parts.extend(all_instants)
+
     if not definite_parts:
         definite_parts = [[compound_word]]
     saved_words[compound_word] = definite_parts
@@ -199,4 +203,4 @@ def get_valid_parts(compound_word: str, saved_words: dict = {}) -> List[str]:
 
 
 if __name__=='__main__':
-    print(sentence_to_words('sorttimetogether kid!', top_limit=10))
+    print(sentence_to_words('forgetthatpage kid!'))
